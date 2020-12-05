@@ -1,0 +1,68 @@
+{% extends 'shared/site.html' %}
+{% block site_content %}
+    <div class="text-center">
+        <h1>Hello, {{ profile_user.username }}</h1>
+        <h5>This is your profile</h5>
+        {% if not profile.profile_picture %}
+            <img class="rounded-circle mb-3"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Anonymous_emblem.svg/1200px-Anonymous_emblem.svg.png"
+             width="140" height="140" alt="Generic picture">
+        {% else %}
+            <img class="rounded-circle mb-3" src="{{ profile.profile_picture }}" width="140" height="140">
+        {% endif %}
+        {% if profile.first_name %}
+            <h3>First Name: {{ profile.first_name }}</h3>
+        {% endif %}
+        {% if profile.middle_name %}
+             <h3>Middle Name: {{ profile.middle_name }}</h3>
+        {% endif %}
+        {% if profile.last_name %}
+             <h3>Last Name: {{ profile.last_name }}</h3>
+        {% endif %}
+        {% if profile.age %}
+             <h3>Age: {{ profile.age }}</h3>
+        {% endif %}
+        {% if profile.mobile_number %}
+             <h3>Mobile Phone: {{ profile.mobile_number }}</h3>
+        {% endif %}
+        <div class="w-50 m-auto">
+            <form action="{% url 'current user profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form }}
+                <button class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    {% if pets %}
+        <h2 class='text-center'>These are you pets</h2>
+        <div class="row">
+            <div class="row">
+                {% for pet in pets %}
+                    <div class="col-lg-4">
+                        <div class="card" style="width: 18rem;">
+                            <img src="{{ pet.image.url }}" class="card-img-top" alt="Image of {{ pet.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Type: {{ pet.type }}
+                                    Name: {{ pet.name }}
+                                    Age: {{ pet.age }}
+                                    Price: {{ pet.price }}{{ pet.price_tag }}
+                                </h5>
+                                <p class="card-text">{{ pet.description }}</p>
+                                <p class="card-text"><strong>Owner: {{ pet.user.user.username }}</strong></p>
+                                <a href="{% url 'pet details or comment' pet.id %}" class="btn btn-primary">See
+                                    details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h2>You have no pets</h2>
+            <a href="{% url 'create pet' %}" class="btn btn-success">Add pets for sale</a>
+        </div>
+    {% endif %}
+{% endblock %}
