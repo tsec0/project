@@ -1,0 +1,42 @@
+{% extends 'shared/site.html' %}
+{% block site_content %}
+    <div class="row">
+        <div class="col-lg-3">
+            <h5 class="aligned">Read your e-mail</h5>
+            <h5 class="aligned">To Respond to this e-mail</h5>
+            <h5 class="aligned">1.Choose the sender user in the "Receiver" field</h5>
+            <h5 class="aligned">2.Type your username in the "Sender" field</h5>
+            <h5 class="aligned">3.Type your message in the "Content" field</h5>
+        </div>
+        <div class="col-lg-6">
+            <form method="post" action="{% url 'edit mail' mail.pk %}"
+                  class="furniture-form"
+                  enctype="multipart/form-data">
+                {{ form }}
+                {% csrf_token %}
+{#                <a href="{% url 'resend mail' %}" class="btn btn-primary">Resend</a>#}
+                <button class="btn btn-primary" type="submit">Respond</button>
+                <a href="{% url 'mail inbox' %}" class="btn btn-danger">Close</a>
+                {% if mail.receiver.user.username == user.username %}
+                    {% if is_read %}
+                        <a href="{% url 'read mail' mail.id %}">
+                            <i class="btn btn-success" aria-hidden="true">READ</i></a>
+                    {% else %}
+                        <a href="{% url 'read mail' mail.id %}">
+                            <i class="btn btn-danger" aria-hidden="true">NOT READ</i></a>
+                    {% endif %}
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
+    <script>
+        function updateImage() {
+            var img = document.getElementById('img_preview');
+            var url = this.value;
+            img.src = url;
+        }
+        document.getElementById('img_input')
+            .addEventListener('input', updateImage);
+    </script>
+{% endblock %}

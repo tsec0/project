@@ -1,0 +1,41 @@
+{% extends 'shared/site.html' %}
+{% block site_content %}
+    {% if mails %}
+        <h2 class='text-center'>
+            These are your mails.
+            You have {{ mails.count }} mails.
+        </h2>
+        <div class="row">
+            <div class="row">
+                {% for mail in mails %}
+                    <hr>
+                    <div class="col-lg-4">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Title: {{ mail.title }}
+                                    Sender: {{ mail.sender }}
+                                    Receiver: {{ mail.receiver.user.username }}
+                                    Mobile: {{ mail.receiver.user.userprofile.mobile_number }}
+                                </h5>
+                                <p class="card-text">{{ mail.content }}</p>
+                                <a href="{% url 'delete mail' mail.id %}" class="btn btn-danger">Delete</a>
+                                <a href="{% url 'edit mail' mail.id %}" class="btn btn-info">Read</a>
+                                {% if mail.isread_set.count > 0 %}
+                                    <a><i class="btn btn-success" aria-hidden="true">Mail read</i></a>
+                                {% else %}
+                                    <a><i class="btn btn-danger" aria-hidden="true">Not read</i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h2>You have no mail</h2>
+            <a href="{% url 'list pets' %}" class="btn btn-success">See the available pets</a>
+        </div>
+    {% endif %}
+{% endblock %}

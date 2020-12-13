@@ -1,0 +1,41 @@
+{% extends 'shared/site.html' %}
+{% block site_content %}
+    {% if pets %}
+    <h1 class='text-center'>All available pets for sale</h1>
+    <div class="row">
+        {% for pet in pets %}
+            <div class="col-lg-4">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{ pet.image.url }}"
+                         class="card-img-top" alt="Generic picture" width="150" height="300">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Name: {{ pet.name }}
+                            Type: {{ pet.type }}
+                            Age: {{ pet.age }}
+                            {% if pet.sell_set.count > 0 %}
+                                Price: SOLD
+                            {% else %}
+                                Price: {{ pet.price }}{{ pet.price_tag }}
+                            {% endif %}
+                        </h5>
+                        <p class="card-text">{{ pet.description }}</p>
+                        <h5>
+                            <u>Owner:</u>
+                            <a href="{% url 'user profile' pet.user.user_id %}">{{ pet.user.user.username }}</a>
+                        </h5>
+                        <a href="{% url 'pet details or comment' pet.id %}" class="btn btn-info">See details</a>
+                        {% if user.userprofile.mobile_number and user.userprofile.first_name and user.userprofile.last_name %}
+                            {% if pet.user.user.username != user.username %}
+                                <a href="{% url 'send to pet user' pet.user.user_id %}" class="btn btn-success">Send message</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h1 class='text-center'>No available pets for sale</h1>
+    {% endif %}
+{% endblock %}
